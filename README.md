@@ -42,7 +42,7 @@ This will finetune pre-trained model specified in `INPUT_MODEL_PATH` using datas
 ## Reproducing results in the paper
 Our results in the paper can be reproduced using a random seed ranging from 0 to 9 with scaffold splitting. 
 
-## Useful resources for Pretrained Graphs Neural Networks
+## Useful resources for Molecular Pre-trained Models (Chemical Language Models)
 * The first comprehensive survey on this topic: [A Systematic Survey of Molecular Pre-trained Models (Chemical Language Models)](https://arxiv.org/abs/2210.16484)
 * [A curated list of must-read papers, open-source pretrained models and pretraining datasets.](https://github.com/junxia97/awesome-pretrain-on-molecules)
 
