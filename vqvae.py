@@ -245,7 +245,7 @@ def train_vae(args, epoch, model_list, loader, optimizer_list, device):
     for step, batch in enumerate(epoch_iter):
         batch = batch.to(device)
         node_rep = model(batch.x, batch.edge_index, batch.edge_attr) 
-        e, e_q_loss = vq_layer(node_rep)
+        e, e_q_loss = vq_layer(node_rep, ,node_rep)
         pred_node = dec_pred_atoms(e, batch.edge_index, batch.edge_attr)
         pred_node_chiral = dec_pred_atoms_chiral(e, batch.edge_index, batch.edge_attr)
         atom_loss = criterion(pred_node, batch.x[:, 0]) 
