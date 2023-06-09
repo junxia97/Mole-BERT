@@ -238,7 +238,7 @@ def main():
     if torch.cuda.is_available():
         torch.cuda.manual_seed_all(0)
 
-    dataset = MoleculeDataset("/root/Mole-BERT-plus/dataset/" + args.dataset, dataset=args.dataset) 
+    dataset = MoleculeDataset("./dataset/" + args.dataset, dataset=args.dataset) 
     gnn = GNN(args.num_layer, args.emb_dim, JK = args.JK, drop_ratio = args.dropout_ratio, gnn_type = args.gnn_type)
     model = graphcl(gnn).to(device)
     codebook = VectorQuantizer(args.emb_dim, args.num_tokens, commitment_cost = 0.25).to(device)
