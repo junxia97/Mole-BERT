@@ -1,5 +1,5 @@
 # Mole-BERT: Rethinking Pre-training Graph Neural Networks for Molecules (ICLR 2023) 
-This is a Pytorch implementation (stay tuned) of the Mole-BERT paper: 
+This is a Pytorch implementation of the Mole-BERT paper: 
 
 ## Installation
 We used the following Python packages for core development. We tested on `Python 3.7`.
