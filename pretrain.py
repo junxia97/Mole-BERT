@@ -6,15 +6,12 @@ import argparse
 from loader import MoleculeDataset
 from dataloader import DataLoaderMasking, DataLoaderMaskingPred#, DataListLoader
 import copy
-
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
 import torch.optim as optim
-
 from tqdm import tqdm
 import numpy as np
-
 from model import GNN, DiscreteGNN
 from sklearn.metrics import roc_auc_score
 
@@ -65,8 +62,7 @@ class VectorQuantizer(nn.Module):
         embedding_dim (int): the dimensionality of the tensors in the
           quantized space. Inputs to the modules must be in this format as well.
         num_embeddings (int): the number of vectors in the quantized space.
-        commitment_cost (float): scalar which controls the weighting of the loss terms (see
-          equation 4 in the paper - this variable is Beta).
+        commitment_cost (float): scalar which controls the weighting of the loss terms.
     """
     def __init__(self, embedding_dim, num_embeddings, commitment_cost):
         super().__init__()
@@ -204,7 +200,7 @@ def main():
                         help='which gpu to use if any (default: 0)')
     parser.add_argument('--batch_size', type=int, default=256,
                         help='input batch size for training (default: 256)')
-    parser.add_argument('--epochs', type=int, default=20,
+    parser.add_argument('--epochs', type=int, default=100,
                         help='number of epochs to train (default: 100)')
     parser.add_argument('--lr', type=float, default=0.001,
                         help='learning rate (default: 0.001)')
@@ -242,13 +238,13 @@ def main():
     if torch.cuda.is_available():
         torch.cuda.manual_seed_all(0)
 
-    dataset = MoleculeDataset("./dataset/" + args.dataset, dataset=args.dataset) 
+    dataset = MoleculeDataset("/root/Mole-BERT-plus/dataset/" + args.dataset, dataset=args.dataset) 
     gnn = GNN(args.num_layer, args.emb_dim, JK = args.JK, drop_ratio = args.dropout_ratio, gnn_type = args.gnn_type)
     model = graphcl(gnn).to(device)
-    tokenizer = GNN(args.num_layer, args.emb_dim, gnn_type = args.gnn_type).to(device)
-    tokenizer.from_pretrained(f"./checkpoints/vqencoder.pth")
     codebook = VectorQuantizer(args.emb_dim, args.num_tokens, commitment_cost = 0.25).to(device)
     codebook.from_pretrained(f"./checkpoints/vqquantizer.pth")
+    tokenizer = DiscreteGNN(args.num_layer, args.emb_dim, args.num_tokens, gnn_type = args.gnn_type).to(device)
+    tokenizer.from_pretrained(f"./checkpoints/vqencoder.pth")
     if not args.input_model_file == "":
         model.gnn.from_pretrained(args.input_model_file)
 

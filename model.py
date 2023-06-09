@@ -333,6 +333,7 @@ class GNN(torch.nn.Module):
         #self.gnn = GNN(self.num_layer, self.emb_dim, JK = self.JK, drop_ratio = self.drop_ratio)
         self.load_state_dict(torch.load(model_file))
 
+
 class DiscreteGNN(torch.nn.Module):
     """
     Args:
@@ -355,7 +356,7 @@ class DiscreteGNN(torch.nn.Module):
         # self.codebook_dim = codebook_dim
         self.temperature = temperature
         # self.loss_weight = loss_weight
-        self.codebook = nn.Embedding(num_tokens, emb_dim)
+        # self.codebook = nn.Embedding(num_tokens, emb_dim)
 
         if self.num_layer < 2:
             raise ValueError("Number of GNN layers must be greater than 1.")
@@ -377,13 +378,13 @@ class DiscreteGNN(torch.nn.Module):
                 self.gnns.append(GATConv(emb_dim))
             elif gnn_type == "graphsage":
                 self.gnns.append(GraphSAGEConv(emb_dim))
-        self.gnns.append(GINConv(emb_dim, num_tokens, aggr = "add"))    
+        self.gnns.append(GINConv(emb_dim, emb_dim, aggr = "add"))    
 
         ###List of batchnorms
         self.batch_norms = torch.nn.ModuleList()
         for layer in range(num_layer - 1):
             self.batch_norms.append(torch.nn.BatchNorm1d(emb_dim))
-        self.batch_norms.append(torch.nn.BatchNorm1d(num_tokens))        
+        self.batch_norms.append(torch.nn.BatchNorm1d(emb_dim))        
 
     def forward(self, *argv):
         if len(argv) == 3:
